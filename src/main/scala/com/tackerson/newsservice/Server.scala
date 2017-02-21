@@ -1,10 +1,13 @@
 package com.tackerson.newsservice
 
+import java.nio.file.{Files, Paths}
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, MediaTypes}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
+
 import scala.io.StdIn
 
 /**
@@ -27,11 +30,14 @@ object Server  {
     val route =
       get {
         pathSingleSlash {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,"<html><body>Hello world!</body></html>"))
+          val workingDirectory = System.getProperty("user.dir")
+          val fullPath = Paths.get(workingDirectory + "/client/index.html")
+          val byteArray = Files.readAllBytes(fullPath)
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, byteArray))
         } ~
-          path("news") {
-            complete(NewsApi.newsResponse(category = "sport"))
-          }
+          path("sources") {
+            complete(NewsApi.newsResponse(category = "general"))
+        }
       }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
