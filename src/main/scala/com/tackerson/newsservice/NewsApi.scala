@@ -16,11 +16,16 @@ object NewsApi {
 
   type Language = String
   type Category = String
+  type Source = String
 
   val newsApiKey: String = System.getenv("NEWS_API_KEY")
-  val baseUrl: String = s"https://newsapi.org/v1/sources/?apikey=$newsApiKey"
+  val baseSourceUrl: String = s"https://newsapi.org/v1/sources/?apikey=$newsApiKey"
+  val baseArticleUrl: String = s"https://newsapi.org/v1/articles/?apikey=$newsApiKey"
 
-  def newsResponse(language: Language = "en", category: Category = "general"): Future[HttpResponse] =
-    Http().singleRequest(HttpRequest(uri = s"$baseUrl&language=$language&category=$category"))
+  def sources(language: Language, category: Category): Future[HttpResponse] =
+    Http().singleRequest(HttpRequest(uri = s"$baseSourceUrl&language=$language&category=$category"))
+
+  def articlesBySource(source: Source): Future[HttpResponse] =
+    Http().singleRequest(HttpRequest(uri = s"$baseArticleUrl&source=$source"))
 
 }

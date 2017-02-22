@@ -4,9 +4,10 @@ import java.nio.file.{Files, Paths}
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, MediaTypes}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
+import com.tackerson.newsservice.NewsApi.{Category, Language}
 
 import scala.io.StdIn
 
@@ -20,13 +21,6 @@ object Server  {
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
 
-// TODO: figure out how to extract route params. Example:
-//    val route =
-//      parameters('color, 'backgroundColor.?) { (color, backgroundColor) =>
-//        val backgroundStr = backgroundColor.getOrElse("<undefined>")
-//        complete(s"The color is '$color' and the background is '$backgroundStr'")
-//      }
-
     val route =
       get {
         pathSingleSlash {
@@ -35,9 +29,14 @@ object Server  {
           val byteArray = Files.readAllBytes(fullPath)
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, byteArray))
         } ~
-          path("sources") {
-            complete(NewsApi.newsResponse(category = "general"))
-        }
+        path("sources") {
+          parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
+            complete(NewsApi.sources(language, category))
+          }
+      } ~ // TODO: seems redundant. Can this be nested?
+          path( "sources" / Segment ) { source =>
+            complete(NewsApi.articlesBySource(source))
+          }
       }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
