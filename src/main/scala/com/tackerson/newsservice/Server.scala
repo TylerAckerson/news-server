@@ -30,20 +30,19 @@ object Server  {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, byteArray))
         } ~
           redirectToNoTrailingSlashIfPresent(StatusCodes.MovedPermanently) {
-            path("sources") {
-              parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
-                complete(NewsApi.sources(language, category))
-              }
-            } ~
-//            ~
-//              path("sources" / Segment) { source =>
-                // TODO: redirect to /articeles
-                // complete(redirect(s"/sources/${source}/articles"))
-//              } ~
-          // TODO: seems redundant. Can this be nested?
-              path("sources" / Segment / "articles") { source =>
-                complete(NewsApi.articlesBySource(source))
-              }
+            pathPrefix("sources") {
+              pathEnd {
+                parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
+                  complete(NewsApi.sources(language, category))
+                }
+              } ~
+                path(Segment / "articles") { source =>
+                  complete(NewsApi.articlesBySource(source))
+                } ~
+                  path(Segment) { source =>
+                    redirect(source + "/articles", StatusCodes.PermanentRedirect)
+                  }
+            }
           }
       }
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
