@@ -4,7 +4,7 @@ import java.nio.file.{Files, Paths}
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import com.tackerson.newsservice.NewsApi.{Category, Language}
@@ -23,22 +23,29 @@ object Server  {
 
     val route =
       get {
-        pathSingleSlash {
+        pathEndOrSingleSlash {
           val workingDirectory = System.getProperty("user.dir")
           val fullPath = Paths.get(workingDirectory + "/client/index.html")
           val byteArray = Files.readAllBytes(fullPath)
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, byteArray))
         } ~
-        path("sources") {
-          parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
-            complete(NewsApi.sources(language, category))
-          }
-      } ~ // TODO: seems redundant. Can this be nested?
-          path( "sources" / Segment ) { source =>
-            complete(NewsApi.articlesBySource(source))
+          redirectToNoTrailingSlashIfPresent(StatusCodes.MovedPermanently) {
+            path("sources") {
+              parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
+                complete(NewsApi.sources(language, category))
+              }
+            } ~
+//            ~
+//              path("sources" / Segment) { source =>
+                // TODO: redirect to /articeles
+                // complete(redirect(s"/sources/${source}/articles"))
+//              } ~
+          // TODO: seems redundant. Can this be nested?
+              path("sources" / Segment / "articles") { source =>
+                complete(NewsApi.articlesBySource(source))
+              }
           }
       }
-
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return

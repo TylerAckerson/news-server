@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  entry: "./assets/javascripts/components/index.js",
+  entry: "./assets/javascripts/index.js",
   output: {
     path: path.resolve(__dirname, 'assets', 'javascripts'),
     publicPath: "/assets/",
