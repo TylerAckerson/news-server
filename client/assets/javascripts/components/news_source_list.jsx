@@ -1,4 +1,5 @@
 import React from 'react';
+import SourceFilters from './source_filters';
 import NewsSource from './news_source';
 
 class NewsSourceList extends React.Component {
@@ -31,11 +32,13 @@ class NewsSourceList extends React.Component {
   render() {
 
     return (
-      <ul>
-        {
-          this.state.items.map(item => <NewsSource item={item} key={item.id}/>)
-        }
-      </ul>
+      <div>
+        <ul>
+          {
+            this.state.items.map(item => <NewsSource item={item} key={item.id}/>)
+          }
+        </ul>
+      </div>
     );
   }
 };
