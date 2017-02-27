@@ -1,5 +1,4 @@
 import React from 'react';
-import SourceFilters from './source_filters';
 import NewsSource from './news_source';
 
 class NewsSourceList extends React.Component {

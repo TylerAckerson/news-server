@@ -1,14 +1,15 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import NewsSourceList from './news_source_list';
-import SourceFiltersContainer from './source_filters_container';
+import NewsSourceList from './sources/news_source_list';
+import FiltersContainer from './filters/filters_container';
 
 const Root = ({ store }) => (
   <Provider store={store}>
-    <SourceFiltersContainer />
+    <div>
+      <FiltersContainer />
+      <NewsSourceList />
+    </div>
   </Provider>
 );
-
-{/* <NewsSourceList /> */}
 
 export default Root;

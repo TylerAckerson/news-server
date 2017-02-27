@@ -1,29 +1,62 @@
-import { ADD_FILTER_LANGUAGE, ADD_FILTER_CATEGORY } from '../actions';
+import {
+  TOGGLE_LANGUAGE,
+  TOGGLE_CATEGORY,
+  RESET_FILTERS
+} from '../actions/filter_actions';
 import merge from 'lodash/merge';
 
 const initialState = {
-  categoryOptions: new Set(["sport", "general"]),
-  languageOptions: new Set(['en', 'de', 'fr']),
-  categories: new Set(),
-  languages: new Set()
+  languages: {
+    en: true,
+    de: false,
+    fr: false,
+  },
+  categories: {
+    general: true,
+    sport: false
+  }
 };
+
+const reset = {
+  languages: {
+    en: true,
+    de: false,
+    fr: false,
+  },
+  categories: {
+    general: true,
+    sport: false
+  }
+}
 
 const filtersReducer = (state = initialState, action) => {
   Object.freeze(state);
   let nextState;
 
   switch(action.type) {
-    case ADD_FILTER_LANGUAGE:
+    case TOGGLE_LANGUAGE:
       nextState = merge({}, state);
-      nextState.languages.add(action.language);
+      nextState.languages[action.language] = !nextState.languages[action.language];
       return nextState;
-    case ADD_FILTER_CATEGORY:
+    case TOGGLE_CATEGORY:
       nextState = merge({}, state);
-      nextState.categories.add(action.category);
+      nextState.categories[action.category] = !nextState.categories[action.category];
       return nextState;
-
+    // case REMOVE_LANGUAGE:
+    //   nextState = merge({}, state);
+    //   delete nextState.languages[action.language];
+    //   return nextState;
+    // case REMOVE_CATEGORY:
+    //   nextState = merge({}, state);
+    //   delete nextState.categories[action.category];
+    //   return nextState;
+    case RESET_FILTERS:
+      // nextState = merge({}, state);
+      // nextState.languages = {};
+      // nextState.categories = {};
+      return reset;
     default:
-    return state;
+      return state;
   }
 
 };

@@ -1,6 +1,12 @@
 import { createStore } from 'redux';
-import rootReducer from './reducers/root_reducer.js';
+import rootReducer from './reducers/root_reducer';
 
-const store = createStore(rootReducer);
+const configureStore = (preloadedState = {}) => {
+  const store = createStore(rootReducer, preloadedState);
+  store.subscribe(() => {
+    localStorage.state = JSON.stringify(store.getState());
+  });
+  return store;
+}
 
-export default store;
+export default configureStore;
