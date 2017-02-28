@@ -42,7 +42,13 @@ object Server  {
                   path(Segment) { source =>
                     redirect(source + "/articles", StatusCodes.PermanentRedirect)
                   }
-            }
+            } ~
+              pathPrefix("filters") {
+                pathEnd {
+//                  complete(NewsApi.categoryFilters)
+                  complete("filters")
+                }
+              }
           }
       }
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)

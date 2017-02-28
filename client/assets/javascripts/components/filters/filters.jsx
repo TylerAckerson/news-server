@@ -2,13 +2,14 @@ import React from 'react';
 
 const Filters = ({
   filters,
+  requestFilters,
   handleToggleLanguage,
   handleToggleCategory,
   handleReset
 }) => {
 
   const {categories, languages} = filters;
-
+  
   return (
     <div>
       <h3>Filter Categories</h3>

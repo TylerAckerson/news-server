@@ -1,4 +1,5 @@
 import {
+  RECEIVE_FILTERS,
   TOGGLE_LANGUAGE,
   TOGGLE_CATEGORY,
   RESET_FILTERS
@@ -34,6 +35,11 @@ const filtersReducer = (state = initialState, action) => {
   let nextState;
 
   switch(action.type) {
+    case RECEIVE_FILTERS:
+      nextState = merge({}, state);
+      debugger;
+      // action.filters.forEach(filter => nextState[filter.id] = filter);
+      return nextState;
     case TOGGLE_LANGUAGE:
       nextState = merge({}, state);
       nextState.languages[action.language] = !nextState.languages[action.language];
@@ -42,18 +48,7 @@ const filtersReducer = (state = initialState, action) => {
       nextState = merge({}, state);
       nextState.categories[action.category] = !nextState.categories[action.category];
       return nextState;
-    // case REMOVE_LANGUAGE:
-    //   nextState = merge({}, state);
-    //   delete nextState.languages[action.language];
-    //   return nextState;
-    // case REMOVE_CATEGORY:
-    //   nextState = merge({}, state);
-    //   delete nextState.categories[action.category];
-    //   return nextState;
     case RESET_FILTERS:
-      // nextState = merge({}, state);
-      // nextState.languages = {};
-      // nextState.categories = {};
       return reset;
     default:
       return state;
