@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 
 import filtersReducer from './filters_reducer';
 import sourcesReducer from './sources_reducer';

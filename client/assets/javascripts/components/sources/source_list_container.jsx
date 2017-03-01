@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import NewsSourceList from './news_source_list';
+import SourceList from './source_list';
 import {allSources} from '../../reducers/selectors';
 import {fetchSources} from '../../actions/source_actions';
 
@@ -11,9 +11,9 @@ const mapDispatchToProps = (dispatch) => ({
   requestSources: () => dispatch(fetchSources())
 });
 
-const NewsSourceListContainer = connect(
+const SourceListContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(NewsSourceList);
+)(SourceList);
 
-export default NewsSourceListContainer;
+export default SourceListContainer;

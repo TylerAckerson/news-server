@@ -1,6 +1,6 @@
 import React from 'react';
 
-class NewsSource extends React.Component {
+class Source extends React.Component {
 	render() {
 		const {name, country, description, language, url, urlsToLogos} = this.props.source;
 
@@ -22,4 +22,4 @@ class NewsSource extends React.Component {
 	}
 };
 
-export default NewsSource;
+export default Source;

@@ -1,7 +1,7 @@
 import React from 'react';
-import NewsSource from './news_source';
+import Source from './source';
 
-class NewsSourceList extends React.Component {
+class SourceList extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -17,7 +17,7 @@ class NewsSourceList extends React.Component {
       <div>
         <ul>
           {
-            sources.map(source => <NewsSource source={source} key={source.id}/>)
+            sources.map(source => <Source source={source} key={source.id}/>)
           }
         </ul>
       </div>
@@ -25,4 +25,4 @@ class NewsSourceList extends React.Component {
   }
 };
 
-export default NewsSourceList;
+export default SourceList;
