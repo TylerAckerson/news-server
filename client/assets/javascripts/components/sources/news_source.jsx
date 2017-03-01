@@ -2,7 +2,7 @@ import React from 'react';
 
 class NewsSource extends React.Component {
 	render() {
-		const {name, country, description, language, url, urlsToLogos} = this.props.item;
+		const {name, country, description, language, url, urlsToLogos} = this.props.source;
 
 		const imgStyle = {
 		  padding: '20px 0',

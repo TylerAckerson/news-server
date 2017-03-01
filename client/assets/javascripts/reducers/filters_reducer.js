@@ -37,8 +37,7 @@ const filtersReducer = (state = initialState, action) => {
   switch(action.type) {
     case RECEIVE_FILTERS:
       nextState = merge({}, state);
-      debugger;
-      // action.filters.forEach(filter => nextState[filter.id] = filter);
+      // action.filters.forEach(filter => nextState[filter] = filter);
       return nextState;
     case TOGGLE_LANGUAGE:
       nextState = merge({}, state);
