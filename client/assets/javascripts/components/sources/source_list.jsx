@@ -14,8 +14,8 @@ class SourceList extends React.Component {
     const sources = this.props.sources;
 
     return (
-      <div>
-        <ul>
+      <div className="pure-u-1 source__list-container">
+        <ul className="source__list">
           {
             sources.map(source => <Source source={source} key={source.id}/>)
           }

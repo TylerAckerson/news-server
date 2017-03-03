@@ -1,0 +1,72 @@
+.filters__container{
+  // color: navy;
+}
+
+.filters__header {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.filter__group {
+  display: inline-block;
+  vertical-align: top;
+  // width: 30%;
+}
+
+.filter__list {
+  padding-left: 10px;
+  margin: 5px auto;
+}
+
+.filter__list-item {
+  list-style: none;
+  display: inline-block;
+  padding: 0 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.filter__status {
+  width: 15px;
+  height: 15px;
+  background: white;
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  border: 1px solid navy;
+  border-radius: 5px;
+  position: relative;
+
+  &--active {
+    background: navy;
+  }
+
+}
+
+.filter__button {
+  color: navy;
+  border: 2px solid navy;
+  box-shadow: none;
+  background: white;
+  border-radius: 3px;
+  vertical-align: text-top;
+  margin: 8px 0px;
+  padding: 8px 12px;
+
+  &:hover {
+    cursor: pointer;
+    color: white;
+    background: navy;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    // color: purple;
+  }
+
+}
