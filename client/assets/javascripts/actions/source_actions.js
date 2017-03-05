@@ -8,8 +8,8 @@ export const receiveSources = sources => ({
   }
 );
 
-export const fetchSources = () => dispatch => (
-  SourceApiUtil.fetchSources().then(resp => {
+export const fetchSources = (filters) => dispatch => (
+  SourceApiUtil.fetchSources(filters).then(resp => {
     dispatch(receiveSources(resp.sources));
   })
 );

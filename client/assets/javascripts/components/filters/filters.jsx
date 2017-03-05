@@ -4,15 +4,10 @@ class Filters extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {
-    this.props.requestFilters();
-  }
-
+  
   render() {
     const {
       filters,
-      requestFilters,
       handleToggleLanguage,
       handleToggleCategory,
       handleReset
