@@ -32,8 +32,8 @@ object Server  {
           redirectToNoTrailingSlashIfPresent(StatusCodes.MovedPermanently) {
             pathPrefix("sources") {
               pathEnd {
-                parameters('language.as[Language] ? "en", 'category.as[Category] ? "general") { (language, category) =>
-                  complete(NewsApi.sources(language, category))
+                parameters('language.as[Language].*, 'category.as[Category].*) { (languages, categories) =>
+                  complete(NewsApi.sources(languages.toList, categories.toList))
                 }
               } ~
                 path(Segment / "articles") { source =>
@@ -53,6 +53,7 @@ object Server  {
       }
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+
     StdIn.readLine() // let it run until user presses return
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port
