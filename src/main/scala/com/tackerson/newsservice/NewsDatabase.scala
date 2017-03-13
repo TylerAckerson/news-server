@@ -4,32 +4,63 @@ import java.net.URI
 
 import com.tackerson.newsservice.tables._
 import slick.driver.H2Driver.api._
+import com.typesafe.config.Config
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
+
 
 /**
   * Created by tackerson on 3/5/17.
   */
 
-class NewsDatabase {
-  val newsdb: Database = Database.forConfig("h2mem1")
-  val sources: TableQuery[Sources]  = SourceTable.sources
-
-  try {
-
-    val setup = DBIO.seq(
-      // Create the tables, including primary and foreign keys
-      sources.schema.create,
-
-      sources ++= Seq(
-        ("epsn", "ESPN: Sports", "espn descr", "http://www.espn.com", "sport", "en", "usa", "http://www.google.com"),
-        ("epsn2", "ESPN: Sports", "espn descr", "http://www.espn.com", "sport", "en", "usa", "http://www.google.com")
-      )
-    )
-
-    val setupFuture = newsdb.run(setup)
-
-  } finally newsdb.close
-
-  val result = sources.result
-}
+//class NewsDatabase(config: String)(implicit ec: ExecutionContext) {
+//
+//  val db: Database = Database.forConfig(config)
+//
+//  try {
+//    db.createSession()
+//    println("databasing")
+//    val sources: TableQuery[Sources] = TableQuery[Sources]
+//
+//    val setupAction: DBIO[Unit] = DBIO.seq(
+//      sources.schema.create,
+//      sources += ("espn", "ESPN: we do sports")
+//    )
+//
+//    val setupFuture: Future[Unit] = db.run(setupAction)
+//
+//    setupFuture.flatMap(_ => {
+//
+//      val allSourcessAction: DBIO[Seq[(String, String)]] =
+//        sources.result
+//
+//      val sourcesFuture: Future[Seq[(String, String)]] =
+//        db.run(allSourcessAction)
+//
+//      sourcesFuture.map(_.foreach(x => {
+////        println("name:" ++ x._1)
+////        println("desc:" ++ x._2)
+//      }))
+//
+//    })
+//
+//  } finally db.close
+//
+//
+//
+//}
+//
+//object NewsDatabase {
+//
+//  def apply(config: String)(implicit ec: ExecutionContext): NewsDatabase = {
+//    new NewsDatabase(config)
+//  }
+//
+//  def apply(config: Config)(implicit ec: ExecutionContext): Try[NewsDatabase] = {
+//    DatabaseCluster.forConfig(config, "twilio.database.test-db").map { config =>
+//      new MemeDatabase(config)
+//    }
+//  }
+//}

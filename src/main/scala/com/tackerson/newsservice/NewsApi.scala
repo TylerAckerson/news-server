@@ -5,6 +5,7 @@ import akka.actor.Status.{Failure, Success}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -30,8 +31,10 @@ object NewsApi {
   def allSources: Future[HttpResponse] =
     Http().singleRequest(HttpRequest(uri = baseSourceUri))
 
-  def sources(languages: Seq[Language], categories: Seq[Category]): Future[HttpResponse] =
+  def sources(languages: Seq[Language], categories: Seq[Category]): Future[HttpResponse] = {
     Http().singleRequest(HttpRequest(uri = buildSourcesUrl(baseSourceUri, languages, categories)))
+  }
+
 
   def buildSourcesUrl(uri: String, languages: Seq[Language], categories: Seq[Category]): Uri = {
     val langParams = buildParams("language", languages)

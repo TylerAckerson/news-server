@@ -17,9 +17,11 @@ import scala.io.StdIn
 object Server  {
 
   def main(args: Array[String]) {
+
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
+    val sourceDatabase = SourceDatabase("h2mem1")
 
     val route =
       get {
@@ -33,6 +35,24 @@ object Server  {
             pathPrefix("sources") {
               pathEnd {
                 parameters('language.as[Language].*, 'category.as[Category].*) { (languages, categories) =>
+
+                  println("hit the sources route")
+//                  val all = sourceDatabase.getSources
+//                  val sourceList = all.map(s => {
+//                    print(s)
+//                  })
+//                  print(all)
+//                  val sourceList = all.map(sources => {
+//                    val l = sources.toList
+//                    l.foreach(source => {
+//                      println("source!")
+//                      println(source.id)
+//                      println(source.name)
+//                    })
+//
+//                    l
+//                  })
+
                   complete(NewsApi.sources(languages.toList, categories.toList))
                 }
               } ~
@@ -51,6 +71,7 @@ object Server  {
               }
           }
       }
+
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
 
