@@ -8,20 +8,19 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import com.tackerson.newsservice.NewsApi.{Category, Language}
-
+import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
 /**
   * Created by tackerson on 2/20/17.
   */
-object Server  {
 
-  def main(args: Array[String]) {
+object Server extends App {
 
+  override def main(args: Array[String]) {
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
-    implicit val executionContext = system.dispatcher
-    val sourceDatabase = SourceDatabase("h2mem1")
+    implicit val executor: ExecutionContext = system.dispatcher
 
     val route =
       get {
@@ -34,26 +33,8 @@ object Server  {
           redirectToNoTrailingSlashIfPresent(StatusCodes.MovedPermanently) {
             pathPrefix("sources") {
               pathEnd {
-                parameters('language.as[Language].*, 'category.as[Category].*) { (languages, categories) =>
-
-                  println("hit the sources route")
-//                  val all = sourceDatabase.getSources
-//                  val sourceList = all.map(s => {
-//                    print(s)
-//                  })
-//                  print(all)
-//                  val sourceList = all.map(sources => {
-//                    val l = sources.toList
-//                    l.foreach(source => {
-//                      println("source!")
-//                      println(source.id)
-//                      println(source.name)
-//                    })
-//
-//                    l
-//                  })
-
-                  complete(NewsApi.sources(languages.toList, categories.toList))
+                parameters('language.as[Language].?, 'category.as[Category].?) { (language, category) =>
+                  complete(NewsApi.sources(language, category))
                 }
               } ~
                 path(Segment / "articles") { source =>
@@ -65,7 +46,6 @@ object Server  {
             } ~
               pathPrefix("filters") {
                 pathEnd {
-//                  complete(NewsApi.categoryFilters)
                   complete("filters")
                 }
               }

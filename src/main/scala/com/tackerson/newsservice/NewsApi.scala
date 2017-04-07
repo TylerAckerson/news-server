@@ -21,7 +21,7 @@ object NewsApi {
   type Source = String
 
   val newsApiKey: String = System.getenv("NEWS_API_KEY")
-  val baseUri = "https://newsapi.org/v1/"
+  val baseUri = "https://newsapi.org/v1"
   val baseArticleUri: String = resourceUri(baseUri, "articles", newsApiKey)
   val baseSourceUri: String = resourceUri(baseUri, "sources", newsApiKey)
 
@@ -31,19 +31,20 @@ object NewsApi {
   def allSources: Future[HttpResponse] =
     Http().singleRequest(HttpRequest(uri = baseSourceUri))
 
-  def sources(languages: Seq[Language], categories: Seq[Category]): Future[HttpResponse] = {
-    Http().singleRequest(HttpRequest(uri = buildSourcesUrl(baseSourceUri, languages, categories)))
+  def sources(language: Option[Language], category: Option[Category]): Future[HttpResponse] = {
+    Http().singleRequest(HttpRequest(uri = buildSourcesUrl(baseSourceUri, language, category)))
   }
 
+  def buildSourcesUrl(uri: String, language: Option[Language], category: Option[Category]): Uri = {
+    val langParams = buildParams("language", language)
+    val catParams = buildParams("category", category)
+    val params = langParams.getOrElse("").concat(catParams.getOrElse(""))
 
-  def buildSourcesUrl(uri: String, languages: Seq[Language], categories: Seq[Category]): Uri = {
-    val langParams = buildParams("language", languages)
-    val catParams = buildParams("category", categories)
-    s"$uri?$langParams$catParams"
+    Uri(uri + params)
   }
 
-  def buildParams(field: String, values: Seq[String]): String =
-    values.map(value => s"&$field=$value").foldLeft("")(_ + _)
+  def buildParams(field: String, value: Option[String]): Option[String] =
+    value.map(value => s"&$field=$value")
 
   def articlesBySource(source: Source): Future[HttpResponse] =
     Http().singleRequest(HttpRequest(uri = s"$baseArticleUri&source=$source"))
