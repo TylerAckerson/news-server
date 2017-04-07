@@ -7,7 +7,9 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import com.tackerson.newsservice.NewsApi.{Category, Language}
+import com.tackerson.newsservice.news_api.{Sources, Articles}
+import com.tackerson.newsservice.news_api.Sources.{Category, Language}
+
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
@@ -34,11 +36,11 @@ object Server extends App {
             pathPrefix("sources") {
               pathEnd {
                 parameters('language.as[Language].?, 'category.as[Category].?) { (language, category) =>
-                  complete(NewsApi.sources(language, category))
+                  complete(Sources.sources(language, category))
                 }
               } ~
                 path(Segment / "articles") { source =>
-                  complete(NewsApi.articlesBySource(source))
+                  complete(Articles.articlesBySource(source))
                 } ~
                   path(Segment) { source =>
                     redirect(source + "/articles", StatusCodes.PermanentRedirect)
