@@ -4,11 +4,9 @@ import java.net.URI
 
 import slick.driver.H2Driver.api._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.tackerson.newsservice.Source
-import slick.lifted.ProvenShape
-
+import slick.driver.H2Driver
 
 
 /**
@@ -17,6 +15,7 @@ import slick.lifted.ProvenShape
 
 
 trait SourcesTable {
+  val db = Database.forConfig("h2mem1")
 
   class Sources(tag: Tag) extends Table[(String, String, String, String, String, String, String, String)](tag, "SOURCES") {
     def id = column[String]("SOURCE_ID", O.PrimaryKey)
@@ -32,4 +31,22 @@ trait SourcesTable {
   }
 
   val sources: TableQuery[Sources] = TableQuery[Sources]
+
+  val schema: H2Driver.DDL = sources.schema
+  db.run(DBIO.seq(
+    schema.create,
+    sources ++= Seq(
+      ("espn", "ESPN", "sports stuff", "www.espn.com", "sport", "en", "us", "www.logoUrl.com"),
+      ("espn 2", "ESPN 2", "sports stuff", "www.espn.com", "sport", "en", "us", "www.logoUrl.com"),
+      ("espn 3", "ESPN 3", "sports stuff", "www.espn.com", "sport", "en", "us", "www.logoUrl.com")
+    )
+  ))
+
+  // debugging
+  schema.create.statements.foreach(println)
+  Thread.sleep(1000)
+  db.run(sources.result).map(_.foreach {
+    case (id, name, description, url, category, language, country, logoUrl) =>
+      println("  " + name + "\t" + description + "\t" + category + "\t" + language + "\t" )
+  })
 }

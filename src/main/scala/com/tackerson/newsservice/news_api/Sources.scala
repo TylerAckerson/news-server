@@ -3,7 +3,6 @@ package com.tackerson.newsservice.news_api
 import akka.actor.Status.{Failure, Success}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, Uri}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 /**

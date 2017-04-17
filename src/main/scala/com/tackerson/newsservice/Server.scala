@@ -7,8 +7,9 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import com.tackerson.newsservice.news_api.{Sources, Articles}
+import com.tackerson.newsservice.news_api.{Articles, Sources}
 import com.tackerson.newsservice.news_api.Sources.{Category, Language}
+import com.tackerson.newsservice.tables.SourcesTable
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
